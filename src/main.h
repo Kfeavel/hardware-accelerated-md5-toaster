@@ -1,3 +1,7 @@
+#include <cuda.h>
+#include <cuda_runtime_api.h>
+
+
 struct device_stats {
   unsigned char word[32][64]; // found word passed from GPU
   int hash_found;         // boolean if word is found
@@ -19,7 +23,7 @@ struct cuda_device {
   void *device_stats_memory;
   struct device_stats stats;
 
-  unsigned int target_hash[15][4];
+  unsigned int *target_hash;
 
   // to be used for debugging
   void *device_debug_memory;

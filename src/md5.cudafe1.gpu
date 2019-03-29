@@ -1,0 +1,945 @@
+typedef char __nv_bool;
+# 2074 "/usr/local/cuda/include/driver_types.h"
+struct CUstream_st;
+# 5 "main.h"
+struct device_stats;
+# 10 "main.h"
+struct cuda_device;
+# 216 "/usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h" 3
+typedef unsigned long size_t;
+#include "crt/device_runtime.h"
+# 151 "/usr/include/x86_64-linux-gnu/sys/types.h" 3
+typedef unsigned uint;
+# 5 "main.h"
+struct device_stats {
+# 6 "main.h"
+unsigned char word[32][64];
+# 7 "main.h"
+int hash_found;};
+# 10 "main.h"
+struct cuda_device {
+# 11 "main.h"
+int device_id;
+# 12 "main.h"
+struct cudaDeviceProp prop;
+# 14 "main.h"
+int max_threads;
+# 15 "main.h"
+int max_blocks;
+# 16 "main.h"
+int shared_memory;
+# 18 "main.h"
+void *device_global_memory;
+# 19 "main.h"
+int device_global_memory_len;
+# 21 "main.h"
+void *host_memory;
+# 23 "main.h"
+void *device_stats_memory;
+# 24 "main.h"
+struct device_stats stats;
+# 26 "main.h"
+unsigned *target_hash;
+# 29 "main.h"
+void *device_debug_memory;};
+# 231 "/usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h" 3
+typedef unsigned long _ZSt6size_t;
+# 3296 "/usr/local/cuda/include/crt/device_functions.h"
+___device__(extern  __no_sc__) unsigned __cudaPushCallConfiguration(struct dim3, struct dim3, size_t, struct CUstream_st *);
+# 52 "md5.cu"
+___device__(static  __no_sc__) void _Z3md5PjS_(uint *, uint *);
+# 166 "md5.cu"
+__global__ __var_used__ extern void _Z18md5_cuda_calculatePvP12device_statsPj(void *, struct device_stats *, unsigned *);
+# 421 "/usr/local/cuda/include/vector_types.h"
+___device__(static  __no_sc__) __inline__ void _ZN4dim3C1Ejjj(struct dim3 *const, unsigned, unsigned, unsigned);
+___device__(static  __no_sc__) __inline__ void _ZN4dim3C2Ejjj(struct dim3 *const, unsigned, unsigned, unsigned);
+# 10 "md5.cu"
+static  __constant__  __var_used__ unsigned target_hash[4];
+#include "common_functions.h"
+# 52 "md5.cu"
+___device__(static  __no_sc__) void _Z3md5PjS_(
+# 52 "md5.cu"
+uint *in, 
+# 52 "md5.cu"
+uint *hash){
+# 52 "md5.cu"
+{
+# 53 "md5.cu"
+ uint __cuda_local_var_22825_8_non_const_a;
+# 53 "md5.cu"
+ uint __cuda_local_var_22825_11_non_const_b;
+# 53 "md5.cu"
+ uint __cuda_local_var_22825_14_non_const_c;
+# 53 "md5.cu"
+ uint __cuda_local_var_22825_17_non_const_d;
+# 55 "md5.cu"
+ uint __cuda_local_var_22827_14_const_a0;
+# 56 "md5.cu"
+ uint __cuda_local_var_22828_14_const_b0;
+# 57 "md5.cu"
+ uint __cuda_local_var_22829_14_const_c0;
+# 58 "md5.cu"
+ uint __cuda_local_var_22830_14_const_d0;
+# 55 "md5.cu"
+__cuda_local_var_22827_14_const_a0 = 1732584193U;
+# 56 "md5.cu"
+__cuda_local_var_22828_14_const_b0 = 4023233417U;
+# 57 "md5.cu"
+__cuda_local_var_22829_14_const_c0 = 2562383102U;
+# 58 "md5.cu"
+__cuda_local_var_22830_14_const_d0 = 271733878U;
+# 60 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = 1732584193U;
+# 61 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = 4023233417U;
+# 62 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = 2562383102U;
+# 63 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = 271733878U;
+# 70 "md5.cu"
+{
+# 70 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_14_non_const_c) | ((~__cuda_local_var_22825_11_non_const_b) & __cuda_local_var_22825_17_non_const_d)) + (in[0])) + 3614090360U);
+# 70 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 7) | (__cuda_local_var_22825_8_non_const_a >> 25));
+# 70 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 70 "md5.cu"
+}
+# 70 "md5.cu"
+;
+# 71 "md5.cu"
+{
+# 71 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_11_non_const_b) | ((~__cuda_local_var_22825_8_non_const_a) & __cuda_local_var_22825_14_non_const_c)) + (in[1])) + 3905402710U);
+# 71 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 12) | (__cuda_local_var_22825_17_non_const_d >> 20));
+# 71 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 71 "md5.cu"
+}
+# 71 "md5.cu"
+;
+# 72 "md5.cu"
+{
+# 72 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_8_non_const_a) | ((~__cuda_local_var_22825_17_non_const_d) & __cuda_local_var_22825_11_non_const_b)) + (in[2])) + 606105819U);
+# 72 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 17) | (__cuda_local_var_22825_14_non_const_c >> 15));
+# 72 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 72 "md5.cu"
+}
+# 72 "md5.cu"
+;
+# 73 "md5.cu"
+{
+# 73 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_17_non_const_d) | ((~__cuda_local_var_22825_14_non_const_c) & __cuda_local_var_22825_8_non_const_a)) + (in[3])) + 3250441966U);
+# 73 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 22) | (__cuda_local_var_22825_11_non_const_b >> 10));
+# 73 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 73 "md5.cu"
+}
+# 73 "md5.cu"
+;
+# 74 "md5.cu"
+{
+# 74 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_14_non_const_c) | ((~__cuda_local_var_22825_11_non_const_b) & __cuda_local_var_22825_17_non_const_d)) + (in[4])) + 4118548399U);
+# 74 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 7) | (__cuda_local_var_22825_8_non_const_a >> 25));
+# 74 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 74 "md5.cu"
+}
+# 74 "md5.cu"
+;
+# 75 "md5.cu"
+{
+# 75 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_11_non_const_b) | ((~__cuda_local_var_22825_8_non_const_a) & __cuda_local_var_22825_14_non_const_c)) + (in[5])) + 1200080426U);
+# 75 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 12) | (__cuda_local_var_22825_17_non_const_d >> 20));
+# 75 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 75 "md5.cu"
+}
+# 75 "md5.cu"
+;
+# 76 "md5.cu"
+{
+# 76 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_8_non_const_a) | ((~__cuda_local_var_22825_17_non_const_d) & __cuda_local_var_22825_11_non_const_b)) + (in[6])) + 2821735955U);
+# 76 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 17) | (__cuda_local_var_22825_14_non_const_c >> 15));
+# 76 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 76 "md5.cu"
+}
+# 76 "md5.cu"
+;
+# 77 "md5.cu"
+{
+# 77 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_17_non_const_d) | ((~__cuda_local_var_22825_14_non_const_c) & __cuda_local_var_22825_8_non_const_a)) + (in[7])) + 4249261313U);
+# 77 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 22) | (__cuda_local_var_22825_11_non_const_b >> 10));
+# 77 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 77 "md5.cu"
+}
+# 77 "md5.cu"
+;
+# 78 "md5.cu"
+{
+# 78 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_14_non_const_c) | ((~__cuda_local_var_22825_11_non_const_b) & __cuda_local_var_22825_17_non_const_d)) + (in[8])) + 1770035416U);
+# 78 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 7) | (__cuda_local_var_22825_8_non_const_a >> 25));
+# 78 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 78 "md5.cu"
+}
+# 78 "md5.cu"
+;
+# 79 "md5.cu"
+{
+# 79 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_11_non_const_b) | ((~__cuda_local_var_22825_8_non_const_a) & __cuda_local_var_22825_14_non_const_c)) + (in[9])) + 2336552879U);
+# 79 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 12) | (__cuda_local_var_22825_17_non_const_d >> 20));
+# 79 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 79 "md5.cu"
+}
+# 79 "md5.cu"
+;
+# 80 "md5.cu"
+{
+# 80 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_8_non_const_a) | ((~__cuda_local_var_22825_17_non_const_d) & __cuda_local_var_22825_11_non_const_b)) + (in[10])) + 4294925233U);
+# 80 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 17) | (__cuda_local_var_22825_14_non_const_c >> 15));
+# 80 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 80 "md5.cu"
+}
+# 80 "md5.cu"
+;
+# 81 "md5.cu"
+{
+# 81 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_17_non_const_d) | ((~__cuda_local_var_22825_14_non_const_c) & __cuda_local_var_22825_8_non_const_a)) + (in[11])) + 2304563134U);
+# 81 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 22) | (__cuda_local_var_22825_11_non_const_b >> 10));
+# 81 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 81 "md5.cu"
+}
+# 81 "md5.cu"
+;
+# 82 "md5.cu"
+{
+# 82 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_14_non_const_c) | ((~__cuda_local_var_22825_11_non_const_b) & __cuda_local_var_22825_17_non_const_d)) + (in[12])) + 1804603682U);
+# 82 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 7) | (__cuda_local_var_22825_8_non_const_a >> 25));
+# 82 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 82 "md5.cu"
+}
+# 82 "md5.cu"
+;
+# 83 "md5.cu"
+{
+# 83 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_11_non_const_b) | ((~__cuda_local_var_22825_8_non_const_a) & __cuda_local_var_22825_14_non_const_c)) + (in[13])) + 4254626195U);
+# 83 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 12) | (__cuda_local_var_22825_17_non_const_d >> 20));
+# 83 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 83 "md5.cu"
+}
+# 83 "md5.cu"
+;
+# 84 "md5.cu"
+{
+# 84 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_8_non_const_a) | ((~__cuda_local_var_22825_17_non_const_d) & __cuda_local_var_22825_11_non_const_b)) + (in[14])) + 2792965006U);
+# 84 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 17) | (__cuda_local_var_22825_14_non_const_c >> 15));
+# 84 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 84 "md5.cu"
+}
+# 84 "md5.cu"
+;
+# 85 "md5.cu"
+{
+# 85 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_17_non_const_d) | ((~__cuda_local_var_22825_14_non_const_c) & __cuda_local_var_22825_8_non_const_a)) + (in[15])) + 1236535329U);
+# 85 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 22) | (__cuda_local_var_22825_11_non_const_b >> 10));
+# 85 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 85 "md5.cu"
+}
+# 85 "md5.cu"
+;
+# 92 "md5.cu"
+{
+# 92 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_17_non_const_d) | (__cuda_local_var_22825_14_non_const_c & (~__cuda_local_var_22825_17_non_const_d))) + (in[1])) + 4129170786U);
+# 92 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 5) | (__cuda_local_var_22825_8_non_const_a >> 27));
+# 92 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 92 "md5.cu"
+}
+# 92 "md5.cu"
+;
+# 93 "md5.cu"
+{
+# 93 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_14_non_const_c) | (__cuda_local_var_22825_11_non_const_b & (~__cuda_local_var_22825_14_non_const_c))) + (in[6])) + 3225465664U);
+# 93 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 9) | (__cuda_local_var_22825_17_non_const_d >> 23));
+# 93 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 93 "md5.cu"
+}
+# 93 "md5.cu"
+;
+# 94 "md5.cu"
+{
+# 94 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_11_non_const_b) | (__cuda_local_var_22825_8_non_const_a & (~__cuda_local_var_22825_11_non_const_b))) + (in[11])) + 643717713U);
+# 94 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 14) | (__cuda_local_var_22825_14_non_const_c >> 18));
+# 94 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 94 "md5.cu"
+}
+# 94 "md5.cu"
+;
+# 95 "md5.cu"
+{
+# 95 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_8_non_const_a) | (__cuda_local_var_22825_17_non_const_d & (~__cuda_local_var_22825_8_non_const_a))) + (in[0])) + 3921069994U);
+# 95 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 20) | (__cuda_local_var_22825_11_non_const_b >> 12));
+# 95 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 95 "md5.cu"
+}
+# 95 "md5.cu"
+;
+# 96 "md5.cu"
+{
+# 96 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_17_non_const_d) | (__cuda_local_var_22825_14_non_const_c & (~__cuda_local_var_22825_17_non_const_d))) + (in[5])) + 3593408605U);
+# 96 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 5) | (__cuda_local_var_22825_8_non_const_a >> 27));
+# 96 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 96 "md5.cu"
+}
+# 96 "md5.cu"
+;
+# 97 "md5.cu"
+{
+# 97 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_14_non_const_c) | (__cuda_local_var_22825_11_non_const_b & (~__cuda_local_var_22825_14_non_const_c))) + (in[10])) + 38016083U);
+# 97 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 9) | (__cuda_local_var_22825_17_non_const_d >> 23));
+# 97 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 97 "md5.cu"
+}
+# 97 "md5.cu"
+;
+# 98 "md5.cu"
+{
+# 98 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_11_non_const_b) | (__cuda_local_var_22825_8_non_const_a & (~__cuda_local_var_22825_11_non_const_b))) + (in[15])) + 3634488961U);
+# 98 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 14) | (__cuda_local_var_22825_14_non_const_c >> 18));
+# 98 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 98 "md5.cu"
+}
+# 98 "md5.cu"
+;
+# 99 "md5.cu"
+{
+# 99 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_8_non_const_a) | (__cuda_local_var_22825_17_non_const_d & (~__cuda_local_var_22825_8_non_const_a))) + (in[4])) + 3889429448U);
+# 99 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 20) | (__cuda_local_var_22825_11_non_const_b >> 12));
+# 99 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 99 "md5.cu"
+}
+# 99 "md5.cu"
+;
+# 100 "md5.cu"
+{
+# 100 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_17_non_const_d) | (__cuda_local_var_22825_14_non_const_c & (~__cuda_local_var_22825_17_non_const_d))) + (in[9])) + 568446438U);
+# 100 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 5) | (__cuda_local_var_22825_8_non_const_a >> 27));
+# 100 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 100 "md5.cu"
+}
+# 100 "md5.cu"
+;
+# 101 "md5.cu"
+{
+# 101 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_14_non_const_c) | (__cuda_local_var_22825_11_non_const_b & (~__cuda_local_var_22825_14_non_const_c))) + (in[14])) + 3275163606U);
+# 101 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 9) | (__cuda_local_var_22825_17_non_const_d >> 23));
+# 101 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 101 "md5.cu"
+}
+# 101 "md5.cu"
+;
+# 102 "md5.cu"
+{
+# 102 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_11_non_const_b) | (__cuda_local_var_22825_8_non_const_a & (~__cuda_local_var_22825_11_non_const_b))) + (in[3])) + 4107603335U);
+# 102 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 14) | (__cuda_local_var_22825_14_non_const_c >> 18));
+# 102 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 102 "md5.cu"
+}
+# 102 "md5.cu"
+;
+# 103 "md5.cu"
+{
+# 103 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_8_non_const_a) | (__cuda_local_var_22825_17_non_const_d & (~__cuda_local_var_22825_8_non_const_a))) + (in[8])) + 1163531501U);
+# 103 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 20) | (__cuda_local_var_22825_11_non_const_b >> 12));
+# 103 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 103 "md5.cu"
+}
+# 103 "md5.cu"
+;
+# 104 "md5.cu"
+{
+# 104 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b & __cuda_local_var_22825_17_non_const_d) | (__cuda_local_var_22825_14_non_const_c & (~__cuda_local_var_22825_17_non_const_d))) + (in[13])) + 2850285829U);
+# 104 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 5) | (__cuda_local_var_22825_8_non_const_a >> 27));
+# 104 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 104 "md5.cu"
+}
+# 104 "md5.cu"
+;
+# 105 "md5.cu"
+{
+# 105 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a & __cuda_local_var_22825_14_non_const_c) | (__cuda_local_var_22825_11_non_const_b & (~__cuda_local_var_22825_14_non_const_c))) + (in[2])) + 4243563512U);
+# 105 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 9) | (__cuda_local_var_22825_17_non_const_d >> 23));
+# 105 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 105 "md5.cu"
+}
+# 105 "md5.cu"
+;
+# 106 "md5.cu"
+{
+# 106 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d & __cuda_local_var_22825_11_non_const_b) | (__cuda_local_var_22825_8_non_const_a & (~__cuda_local_var_22825_11_non_const_b))) + (in[7])) + 1735328473U);
+# 106 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 14) | (__cuda_local_var_22825_14_non_const_c >> 18));
+# 106 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 106 "md5.cu"
+}
+# 106 "md5.cu"
+;
+# 107 "md5.cu"
+{
+# 107 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c & __cuda_local_var_22825_8_non_const_a) | (__cuda_local_var_22825_17_non_const_d & (~__cuda_local_var_22825_8_non_const_a))) + (in[12])) + 2368359562U);
+# 107 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 20) | (__cuda_local_var_22825_11_non_const_b >> 12));
+# 107 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 107 "md5.cu"
+}
+# 107 "md5.cu"
+;
+# 114 "md5.cu"
+{
+# 114 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b ^ __cuda_local_var_22825_14_non_const_c) ^ __cuda_local_var_22825_17_non_const_d) + (in[5])) + 4294588738U);
+# 114 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 4) | (__cuda_local_var_22825_8_non_const_a >> 28));
+# 114 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 114 "md5.cu"
+}
+# 114 "md5.cu"
+;
+# 115 "md5.cu"
+{
+# 115 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a ^ __cuda_local_var_22825_11_non_const_b) ^ __cuda_local_var_22825_14_non_const_c) + (in[8])) + 2272392833U);
+# 115 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 11) | (__cuda_local_var_22825_17_non_const_d >> 21));
+# 115 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 115 "md5.cu"
+}
+# 115 "md5.cu"
+;
+# 116 "md5.cu"
+{
+# 116 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d ^ __cuda_local_var_22825_8_non_const_a) ^ __cuda_local_var_22825_11_non_const_b) + (in[11])) + 1839030562U);
+# 116 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 16) | (__cuda_local_var_22825_14_non_const_c >> 16));
+# 116 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 116 "md5.cu"
+}
+# 116 "md5.cu"
+;
+# 117 "md5.cu"
+{
+# 117 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c ^ __cuda_local_var_22825_17_non_const_d) ^ __cuda_local_var_22825_8_non_const_a) + (in[14])) + 4259657740U);
+# 117 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 23) | (__cuda_local_var_22825_11_non_const_b >> 9));
+# 117 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 117 "md5.cu"
+}
+# 117 "md5.cu"
+;
+# 118 "md5.cu"
+{
+# 118 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b ^ __cuda_local_var_22825_14_non_const_c) ^ __cuda_local_var_22825_17_non_const_d) + (in[1])) + 2763975236U);
+# 118 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 4) | (__cuda_local_var_22825_8_non_const_a >> 28));
+# 118 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 118 "md5.cu"
+}
+# 118 "md5.cu"
+;
+# 119 "md5.cu"
+{
+# 119 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a ^ __cuda_local_var_22825_11_non_const_b) ^ __cuda_local_var_22825_14_non_const_c) + (in[4])) + 1272893353U);
+# 119 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 11) | (__cuda_local_var_22825_17_non_const_d >> 21));
+# 119 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 119 "md5.cu"
+}
+# 119 "md5.cu"
+;
+# 120 "md5.cu"
+{
+# 120 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d ^ __cuda_local_var_22825_8_non_const_a) ^ __cuda_local_var_22825_11_non_const_b) + (in[7])) + 4139469664U);
+# 120 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 16) | (__cuda_local_var_22825_14_non_const_c >> 16));
+# 120 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 120 "md5.cu"
+}
+# 120 "md5.cu"
+;
+# 121 "md5.cu"
+{
+# 121 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c ^ __cuda_local_var_22825_17_non_const_d) ^ __cuda_local_var_22825_8_non_const_a) + (in[10])) + 3200236656U);
+# 121 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 23) | (__cuda_local_var_22825_11_non_const_b >> 9));
+# 121 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 121 "md5.cu"
+}
+# 121 "md5.cu"
+;
+# 122 "md5.cu"
+{
+# 122 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b ^ __cuda_local_var_22825_14_non_const_c) ^ __cuda_local_var_22825_17_non_const_d) + (in[13])) + 681279174U);
+# 122 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 4) | (__cuda_local_var_22825_8_non_const_a >> 28));
+# 122 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 122 "md5.cu"
+}
+# 122 "md5.cu"
+;
+# 123 "md5.cu"
+{
+# 123 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a ^ __cuda_local_var_22825_11_non_const_b) ^ __cuda_local_var_22825_14_non_const_c) + (in[0])) + 3936430074U);
+# 123 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 11) | (__cuda_local_var_22825_17_non_const_d >> 21));
+# 123 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 123 "md5.cu"
+}
+# 123 "md5.cu"
+;
+# 124 "md5.cu"
+{
+# 124 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d ^ __cuda_local_var_22825_8_non_const_a) ^ __cuda_local_var_22825_11_non_const_b) + (in[3])) + 3572445317U);
+# 124 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 16) | (__cuda_local_var_22825_14_non_const_c >> 16));
+# 124 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 124 "md5.cu"
+}
+# 124 "md5.cu"
+;
+# 125 "md5.cu"
+{
+# 125 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c ^ __cuda_local_var_22825_17_non_const_d) ^ __cuda_local_var_22825_8_non_const_a) + (in[6])) + 76029189U);
+# 125 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 23) | (__cuda_local_var_22825_11_non_const_b >> 9));
+# 125 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 125 "md5.cu"
+}
+# 125 "md5.cu"
+;
+# 126 "md5.cu"
+{
+# 126 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += ((((__cuda_local_var_22825_11_non_const_b ^ __cuda_local_var_22825_14_non_const_c) ^ __cuda_local_var_22825_17_non_const_d) + (in[9])) + 3654602809U);
+# 126 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 4) | (__cuda_local_var_22825_8_non_const_a >> 28));
+# 126 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 126 "md5.cu"
+}
+# 126 "md5.cu"
+;
+# 127 "md5.cu"
+{
+# 127 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += ((((__cuda_local_var_22825_8_non_const_a ^ __cuda_local_var_22825_11_non_const_b) ^ __cuda_local_var_22825_14_non_const_c) + (in[12])) + 3873151461U);
+# 127 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 11) | (__cuda_local_var_22825_17_non_const_d >> 21));
+# 127 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 127 "md5.cu"
+}
+# 127 "md5.cu"
+;
+# 128 "md5.cu"
+{
+# 128 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += ((((__cuda_local_var_22825_17_non_const_d ^ __cuda_local_var_22825_8_non_const_a) ^ __cuda_local_var_22825_11_non_const_b) + (in[15])) + 530742520U);
+# 128 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 16) | (__cuda_local_var_22825_14_non_const_c >> 16));
+# 128 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 128 "md5.cu"
+}
+# 128 "md5.cu"
+;
+# 129 "md5.cu"
+{
+# 129 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += ((((__cuda_local_var_22825_14_non_const_c ^ __cuda_local_var_22825_17_non_const_d) ^ __cuda_local_var_22825_8_non_const_a) + (in[2])) + 3299628645U);
+# 129 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 23) | (__cuda_local_var_22825_11_non_const_b >> 9));
+# 129 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 129 "md5.cu"
+}
+# 129 "md5.cu"
+;
+# 136 "md5.cu"
+{
+# 136 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += (((__cuda_local_var_22825_14_non_const_c ^ (__cuda_local_var_22825_11_non_const_b | (~__cuda_local_var_22825_17_non_const_d))) + (in[0])) + 4096336452U);
+# 136 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 6) | (__cuda_local_var_22825_8_non_const_a >> 26));
+# 136 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 136 "md5.cu"
+}
+# 136 "md5.cu"
+;
+# 137 "md5.cu"
+{
+# 137 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += (((__cuda_local_var_22825_11_non_const_b ^ (__cuda_local_var_22825_8_non_const_a | (~__cuda_local_var_22825_14_non_const_c))) + (in[7])) + 1126891415U);
+# 137 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 10) | (__cuda_local_var_22825_17_non_const_d >> 22));
+# 137 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 137 "md5.cu"
+}
+# 137 "md5.cu"
+;
+# 138 "md5.cu"
+{
+# 138 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += (((__cuda_local_var_22825_8_non_const_a ^ (__cuda_local_var_22825_17_non_const_d | (~__cuda_local_var_22825_11_non_const_b))) + (in[14])) + 2878612391U);
+# 138 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 15) | (__cuda_local_var_22825_14_non_const_c >> 17));
+# 138 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 138 "md5.cu"
+}
+# 138 "md5.cu"
+;
+# 139 "md5.cu"
+{
+# 139 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += (((__cuda_local_var_22825_17_non_const_d ^ (__cuda_local_var_22825_14_non_const_c | (~__cuda_local_var_22825_8_non_const_a))) + (in[5])) + 4237533241U);
+# 139 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 21) | (__cuda_local_var_22825_11_non_const_b >> 11));
+# 139 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 139 "md5.cu"
+}
+# 139 "md5.cu"
+;
+# 140 "md5.cu"
+{
+# 140 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += (((__cuda_local_var_22825_14_non_const_c ^ (__cuda_local_var_22825_11_non_const_b | (~__cuda_local_var_22825_17_non_const_d))) + (in[12])) + 1700485571U);
+# 140 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 6) | (__cuda_local_var_22825_8_non_const_a >> 26));
+# 140 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 140 "md5.cu"
+}
+# 140 "md5.cu"
+;
+# 141 "md5.cu"
+{
+# 141 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += (((__cuda_local_var_22825_11_non_const_b ^ (__cuda_local_var_22825_8_non_const_a | (~__cuda_local_var_22825_14_non_const_c))) + (in[3])) + 2399980690U);
+# 141 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 10) | (__cuda_local_var_22825_17_non_const_d >> 22));
+# 141 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 141 "md5.cu"
+}
+# 141 "md5.cu"
+;
+# 142 "md5.cu"
+{
+# 142 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += (((__cuda_local_var_22825_8_non_const_a ^ (__cuda_local_var_22825_17_non_const_d | (~__cuda_local_var_22825_11_non_const_b))) + (in[10])) + 4293915773U);
+# 142 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 15) | (__cuda_local_var_22825_14_non_const_c >> 17));
+# 142 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 142 "md5.cu"
+}
+# 142 "md5.cu"
+;
+# 143 "md5.cu"
+{
+# 143 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += (((__cuda_local_var_22825_17_non_const_d ^ (__cuda_local_var_22825_14_non_const_c | (~__cuda_local_var_22825_8_non_const_a))) + (in[1])) + 2240044497U);
+# 143 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 21) | (__cuda_local_var_22825_11_non_const_b >> 11));
+# 143 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 143 "md5.cu"
+}
+# 143 "md5.cu"
+;
+# 144 "md5.cu"
+{
+# 144 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += (((__cuda_local_var_22825_14_non_const_c ^ (__cuda_local_var_22825_11_non_const_b | (~__cuda_local_var_22825_17_non_const_d))) + (in[8])) + 1873313359U);
+# 144 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 6) | (__cuda_local_var_22825_8_non_const_a >> 26));
+# 144 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 144 "md5.cu"
+}
+# 144 "md5.cu"
+;
+# 145 "md5.cu"
+{
+# 145 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += (((__cuda_local_var_22825_11_non_const_b ^ (__cuda_local_var_22825_8_non_const_a | (~__cuda_local_var_22825_14_non_const_c))) + (in[15])) + 4264355552U);
+# 145 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 10) | (__cuda_local_var_22825_17_non_const_d >> 22));
+# 145 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 145 "md5.cu"
+}
+# 145 "md5.cu"
+;
+# 146 "md5.cu"
+{
+# 146 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += (((__cuda_local_var_22825_8_non_const_a ^ (__cuda_local_var_22825_17_non_const_d | (~__cuda_local_var_22825_11_non_const_b))) + (in[6])) + 2734768916U);
+# 146 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 15) | (__cuda_local_var_22825_14_non_const_c >> 17));
+# 146 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 146 "md5.cu"
+}
+# 146 "md5.cu"
+;
+# 147 "md5.cu"
+{
+# 147 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += (((__cuda_local_var_22825_17_non_const_d ^ (__cuda_local_var_22825_14_non_const_c | (~__cuda_local_var_22825_8_non_const_a))) + (in[13])) + 1309151649U);
+# 147 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 21) | (__cuda_local_var_22825_11_non_const_b >> 11));
+# 147 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 147 "md5.cu"
+}
+# 147 "md5.cu"
+;
+# 148 "md5.cu"
+{
+# 148 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += (((__cuda_local_var_22825_14_non_const_c ^ (__cuda_local_var_22825_11_non_const_b | (~__cuda_local_var_22825_17_non_const_d))) + (in[4])) + 4149444226U);
+# 148 "md5.cu"
+__cuda_local_var_22825_8_non_const_a = ((__cuda_local_var_22825_8_non_const_a << 6) | (__cuda_local_var_22825_8_non_const_a >> 26));
+# 148 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += __cuda_local_var_22825_11_non_const_b;
+# 148 "md5.cu"
+}
+# 148 "md5.cu"
+;
+# 149 "md5.cu"
+{
+# 149 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += (((__cuda_local_var_22825_11_non_const_b ^ (__cuda_local_var_22825_8_non_const_a | (~__cuda_local_var_22825_14_non_const_c))) + (in[11])) + 3174756917U);
+# 149 "md5.cu"
+__cuda_local_var_22825_17_non_const_d = ((__cuda_local_var_22825_17_non_const_d << 10) | (__cuda_local_var_22825_17_non_const_d >> 22));
+# 149 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += __cuda_local_var_22825_8_non_const_a;
+# 149 "md5.cu"
+}
+# 149 "md5.cu"
+;
+# 150 "md5.cu"
+{
+# 150 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += (((__cuda_local_var_22825_8_non_const_a ^ (__cuda_local_var_22825_17_non_const_d | (~__cuda_local_var_22825_11_non_const_b))) + (in[2])) + 718787259U);
+# 150 "md5.cu"
+__cuda_local_var_22825_14_non_const_c = ((__cuda_local_var_22825_14_non_const_c << 15) | (__cuda_local_var_22825_14_non_const_c >> 17));
+# 150 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += __cuda_local_var_22825_17_non_const_d;
+# 150 "md5.cu"
+}
+# 150 "md5.cu"
+;
+# 151 "md5.cu"
+{
+# 151 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += (((__cuda_local_var_22825_17_non_const_d ^ (__cuda_local_var_22825_14_non_const_c | (~__cuda_local_var_22825_8_non_const_a))) + (in[9])) + 3951481745U);
+# 151 "md5.cu"
+__cuda_local_var_22825_11_non_const_b = ((__cuda_local_var_22825_11_non_const_b << 21) | (__cuda_local_var_22825_11_non_const_b >> 11));
+# 151 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += __cuda_local_var_22825_14_non_const_c;
+# 151 "md5.cu"
+}
+# 151 "md5.cu"
+;
+# 153 "md5.cu"
+__cuda_local_var_22825_8_non_const_a += 1732584193U;
+# 154 "md5.cu"
+__cuda_local_var_22825_11_non_const_b += 4023233417U;
+# 155 "md5.cu"
+__cuda_local_var_22825_14_non_const_c += 2562383102U;
+# 156 "md5.cu"
+__cuda_local_var_22825_17_non_const_d += 271733878U;
+# 158 "md5.cu"
+(hash[0]) = __cuda_local_var_22825_8_non_const_a;
+# 159 "md5.cu"
+(hash[1]) = __cuda_local_var_22825_11_non_const_b;
+# 160 "md5.cu"
+(hash[2]) = __cuda_local_var_22825_14_non_const_c;
+# 161 "md5.cu"
+(hash[3]) = __cuda_local_var_22825_17_non_const_d;
+# 163 "md5.cu"
+return;
+# 164 "md5.cu"
+}}
+# 166 "md5.cu"
+__global__ __var_used__ void _Z18md5_cuda_calculatePvP12device_statsPj(
+# 166 "md5.cu"
+void *memory, 
+# 166 "md5.cu"
+struct device_stats *stats, 
+# 167 "md5.cu"
+unsigned *debug_memory){
+# 167 "md5.cu"
+{
+# 168 "md5.cu"
+ unsigned __cuda_local_var_22940_16_non_const_id;
+# 169 "md5.cu"
+ unsigned *__cuda_local_var_22941_17_non_const_shared_memory;
+# 170 "md5.cu"
+ uint __cuda_local_var_22942_8_non_const_hash[4];
+# 171 "md5.cu"
+ int __cuda_local_var_22943_7_non_const_x;
+# 173 "md5.cu"
+__cuda_local_var_22940_16_non_const_id = (((blockIdx.x) * (blockDim.x)) + (threadIdx.x));
+# 178 "md5.cu"
+_Z3md5PjS_(__cuda_local_var_22941_17_non_const_shared_memory, (__cuda_local_var_22942_8_non_const_hash));
+# 180 "md5.cu"
+if ((((((__cuda_local_var_22942_8_non_const_hash)[0]) == ((target_hash)[0])) && (((__cuda_local_var_22942_8_non_const_hash)[1]) == ((target_hash)[1]))) && (((__cuda_local_var_22942_8_non_const_hash)[2]) == ((target_hash)[2]))) && (((__cuda_local_var_22942_8_non_const_hash)[3]) == ((target_hash)[3])))
+# 181 "md5.cu"
+{
+# 183 "md5.cu"
+(stats->hash_found) = 1;
+# 185 "md5.cu"
+for (__cuda_local_var_22943_7_non_const_x = 0; (__cuda_local_var_22943_7_non_const_x < 64); __cuda_local_var_22943_7_non_const_x++)
+# 185 "md5.cu"
+{
+# 188 "md5.cu"
+}
+# 189 "md5.cu"
+} 
+# 190 "md5.cu"
+}}
+__asm__(".align 2");
+# 421 "/usr/local/cuda/include/vector_types.h"
+___device__(static  __no_sc__) __inline__ void _ZN4dim3C1Ejjj( struct dim3 *const this, 
+# 421 "/usr/local/cuda/include/vector_types.h"
+unsigned vx, 
+# 421 "/usr/local/cuda/include/vector_types.h"
+unsigned vy, 
+# 421 "/usr/local/cuda/include/vector_types.h"
+unsigned vz){
+# 421 "/usr/local/cuda/include/vector_types.h"
+{
+# 421 "/usr/local/cuda/include/vector_types.h"
+(this->x) = vx;
+# 421 "/usr/local/cuda/include/vector_types.h"
+(this->y) = vy;
+# 421 "/usr/local/cuda/include/vector_types.h"
+(this->z) = vz; 
+# 421 "/usr/local/cuda/include/vector_types.h"
+}}
+__asm__(".align 2");
+___device__(static  __no_sc__) __inline__ void _ZN4dim3C2Ejjj( struct dim3 *const this,  unsigned __T0,  unsigned __T1,  unsigned __T2){ {  _ZN4dim3C1Ejjj(this, __T0, __T1, __T2);  }}

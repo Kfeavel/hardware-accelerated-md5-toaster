@@ -1,16 +1,13 @@
 #include <cuda.h>
 #include <stdio.h>
-
 #include "main.h"
 
 #define UINT4 uint
 
 extern __shared__ unsigned int
-    words[]; // shared memory where hash will be stored
+    words[];        // shared memory where hash will be stored
 __constant__ unsigned int
     target_hash[4]; // constant has we will be searching for
-
-
 
 /* F, G and H are basic MD5 functions: selection, majority, parity */
 
@@ -176,14 +173,7 @@ __global__ void md5_cuda_calculate(void *memory, struct device_stats *stats,
   id = (blockIdx.x * blockDim.x) +
        threadIdx.x; // get our thread unique ID in this run
 
-  shared_memory = format_shared_memory(id, (unsigned int *)memory);
-
-#ifdef DEBUG
-  // passes the computed hashes into debug memory
-  for (x = 0; x < 4; x++) {
-    debug_memory[(id * 4) + x] = (uint)shared_memory[x];
-  }
-#endif
+  //shared_memory = format_shared_memory(id, (unsigned int *)memory);
 
   md5(shared_memory, hash); // actually calculate the MD5 hash
 
@@ -194,7 +184,7 @@ __global__ void md5_cuda_calculate(void *memory, struct device_stats *stats,
 
     for (x = 0; x < 64; x++) {
       // copy the matched word accross
-      stats->word[x] = *(char *)((char *)shared_memory + x);
+      //stats->word[x] = *(char *)((char *)shared_memory + x);
     }
   }
 }
@@ -203,29 +193,9 @@ void md5_calculate(struct cuda_device *device) {
   cudaEvent_t start, stop;
   float time;
 
-#ifdef GPU_BENCHMARK
-  cudaEventCreate(&start);
-  cudaEventCreate(&stop);
-
-  cudaEventRecord(start, 0);
-  cudaThreadSynchronize();
-#endif
-
   md5_cuda_calculate<<<device->max_blocks, device->max_threads,
                        device->shared_memory>>>(
       device->device_global_memory,
       (struct device_stats *)device->device_stats_memory,
       (unsigned int *)device->device_debug_memory);
-
-#ifdef GPU_BENCHMARK
-  cudaEventRecord(stop, 0);
-  cudaEventSynchronize(stop);
-  cudaEventElapsedTime(&time, start, stop);
-  cudaEventDestroy(start);
-  cudaEventDestroy(stop);
-  printf("CUDA kernel took %fms to calculate %d x %d (%d) hashes\n", time,
-         device->max_blocks, device->max_threads,
-         device->max_blocks * device->max_threads);
-// print GPU stats here
-#endif
 }
