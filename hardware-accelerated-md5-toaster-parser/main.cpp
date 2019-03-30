@@ -14,10 +14,16 @@ struct wordlist_file {
 map<string, int> read_wordlist(struct wordlist_file *file) {
     map<string, int> mp;
     string word;
+    int len = 0;
+    string lWord;
     while (file->ifs >> word) {
         char tmp [64];
         sscanf(word.c_str(), "%[a-zA-Z]", tmp);
         string newWord(tmp);
+        if(len < newWord.size()){
+            len = newWord.size();
+            lWord = newWord;
+        }
         transform(newWord.begin(), newWord.end(), newWord.begin(), ::tolower);
         if (!mp.count(newWord) && newWord.size() > 3) {
             mp.insert(make_pair(newWord, 1));
@@ -25,6 +31,7 @@ map<string, int> read_wordlist(struct wordlist_file *file) {
             mp[newWord]++;
         }
     }
+    printf("The longest word\"%s\" is %i long", lWord.c_str(), len);
     return mp;
 }
 

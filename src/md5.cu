@@ -50,7 +50,8 @@ __constant__ unsigned int
   }
   
   
-__device__char *md5_pad(const char *input) {
+
+__device__ char *md5_pad(const char *input) {
   static char md5_padded[MD5_INPUT_LENGTH];
   int x;
   unsigned int orig_input_length;
@@ -238,7 +239,7 @@ void md5_calculate(struct cuda_device *device) {
   memset(AppendIndexes, 0, 6*sizeof(char)); //start everything as 0
   
   
-  for(Caps = 0; Caps < 1024; Caps++) {
+  for(Caps = 0; Caps < (1<<16); Caps++) {
 	  
   }
   md5_cuda_calculate<<<device->max_blocks, device->max_threads,
