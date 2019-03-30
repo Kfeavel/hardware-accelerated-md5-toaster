@@ -48,6 +48,43 @@ __constant__ unsigned int
     (a) = ROTATE_LEFT((a), (s));                                               \
     (a) += (b);                                                                \
   }
+  
+  
+__device__char *md5_pad(const char *input) {
+  static char md5_padded[MD5_INPUT_LENGTH];
+  int x;
+  unsigned int orig_input_length;
+
+  if (input == NULL)
+  {
+    return NULL;
+  }
+
+  // we store the length of the input (in bits) for later
+
+  orig_input_length = strlen(input) * 8;
+
+  // we would like to split the MD5 into 512 bit chunks with a special ending
+  // the maximum input we support is currently 512 bits as we are not expecting
+  // a string password to be larger than this
+
+  memset(md5_padded, 0, MD5_INPUT_LENGTH);
+
+  for (x = 0; x < strlen(input) && x < 56; x++)
+  {
+    md5_padded[x] = input[x];
+  }
+
+  md5_padded[x] = 0x80;
+
+  // now we need to append the length in bits of the original message
+
+  *((unsigned long *)md5_padded + 14) = orig_input_length;
+
+  return md5_padded;
+}
+
+
 
 __device__ void md5(uint *in, uint *hash) {
   uint a, b, c, d;
@@ -165,6 +202,7 @@ __device__ void md5(uint *in, uint *hash) {
 
 __global__ void md5_cuda_calculate(void *memory, struct device_stats *stats,
                                    unsigned int *debug_memory) {
+  char AppendChar[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
   unsigned int id;
   unsigned int *shared_memory;
   uint hash[4];
@@ -183,7 +221,7 @@ __global__ void md5_cuda_calculate(void *memory, struct device_stats *stats,
     stats->hash_found = 1;
 
     for (x = 0; x < 64; x++) {
-      // copy the matched word accross
+      // copy the matched word across
       //stats->word[x] = *(char *)((char *)shared_memory + x);
     }
   }
@@ -192,7 +230,17 @@ __global__ void md5_cuda_calculate(void *memory, struct device_stats *stats,
 void md5_calculate(struct cuda_device *device) {
   cudaEvent_t start, stop;
   float time;
-
+  uint32_t Caps = 0;
+  uint32_t Special = 0;
+  uint32_t AppendIndex = 0;
+  char * AppendIndexes;
+  cudaMallocManaged(&AppendIndexes, 6*sizeof(char));
+  memset(AppendIndexes, 0, 6*sizeof(char)); //start everything as 0
+  
+  
+  for(Caps = 0; Caps < 1024; Caps++) {
+	  
+  }
   md5_cuda_calculate<<<device->max_blocks, device->max_threads,
                        device->shared_memory>>>(
       device->device_global_memory,

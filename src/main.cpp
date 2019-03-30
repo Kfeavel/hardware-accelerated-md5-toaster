@@ -33,40 +33,7 @@ char *md5_unpad(char *input)
   return md5_unpadded;
 }
 
-char *md5_pad(const char *input)
-{
-  static char md5_padded[MD5_INPUT_LENGTH];
-  int x;
-  unsigned int orig_input_length;
 
-  if (input == NULL)
-  {
-    return NULL;
-  }
-
-  // we store the length of the input (in bits) for later
-
-  orig_input_length = strlen(input) * 8;
-
-  // we would like to split the MD5 into 512 bit chunks with a special ending
-  // the maximum input we support is currently 512 bits as we are not expecting
-  // a string password to be larger than this
-
-  memset(md5_padded, 0, MD5_INPUT_LENGTH);
-
-  for (x = 0; x < strlen(input) && x < 56; x++)
-  {
-    md5_padded[x] = input[x];
-  }
-
-  md5_padded[x] = 0x80;
-
-  // now we need to append the length in bits of the original message
-
-  *((unsigned long *)md5_padded + 14) = orig_input_length;
-
-  return md5_padded;
-}
 
 int get_cuda_device(struct cuda_device *device)
 {
@@ -144,29 +111,21 @@ struct wordlist_file
 
 int read_wordlist(struct wordlist_file *file)
 {
-  std::map<std::string, int> mp;
 
   std::string word;
+  vector<string> words;
   while (file->ifs >> word)
   {
-    transform(word.begin(), word.end(), word.begin(), ::tolower);
-    if (!mp.count(word))
-    {
-      mp.insert(make_pair(word, 1));
-    }
-    else
-    {
-      mp[word]++;
-    }
+    words.push_back(word);
   }
   file->len = 0;
-  cudaMallocManaged(&(file->words), mp.size() * 64 * sizeof(char));
-  for (auto p = mp.begin(); p != mp.end(); p++)
-  {
-    char *tmp = md5_pad(word.c_str());
+  cudaMallocManaged(&(file->words), words.size() * 64 * sizeof(char));
+  for (int i = 0; i < words.size(); i++) {
+	char *tmp = word.c_str();
     copy(&tmp, &tmp + 64, file->words + file.len * 64);
     file->len++;
   }
+
 
   return 1;
 }
