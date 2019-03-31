@@ -1,6 +1,9 @@
+#ifndef main_h
+#define main_h
 #include <cuda.h>
 #include <cuda_runtime_api.h>
-
+#include <fstream>
+using namespace std;
 
 struct device_stats {
   unsigned char word[32][64]; // found word passed from GPU
@@ -11,7 +14,7 @@ struct device_stats {
 
 struct wordlist_file
 {
-  std::ifstream ifs;
+  ifstream ifs;
   int len;
   char *words;
 };
@@ -39,3 +42,5 @@ struct cuda_device {
   // to be used for debugging
   void *device_debug_memory;
 };
+
+#endif

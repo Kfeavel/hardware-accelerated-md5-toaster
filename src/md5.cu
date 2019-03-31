@@ -1,9 +1,11 @@
 #include "main.h"
+#include "md5.cuh"
 #include <chrono>
 #include <cuda.h>
 #include <stdio.h>
+#include "device_launch_parameters.h"
 
-#define UINT4 uint
+#define UINT4 uint32_t
 #define MD5_INPUT_LENGTH 512
 
 extern __shared__ unsigned int
@@ -51,37 +53,37 @@ __constant__ unsigned int
     (a) += (b);                                                                \
   }
 
-__device__ int strcmp(const char *s1, const char *s2) {
+__device__ int custrcmp(const char *s1, const char *s2) {
   for (; *s1 == *s2; ++s1, ++s2)
     if (*s1 == 0)
       return 0;
   return *(unsigned char *)s1 < *(unsigned char *)s2 ? -1 : 1;
 }
 
-__device__ size_t strlen(const char *str) {
+__device__ size_t custrlen(const char *str) {
   const char *s;
   for (s = str; *s; ++s) {
   }
   return (s - str);
 }
 
-__device__ char *strcpy(char *dest, const char *src) {
+__device__ char *custrcpy(char *dest, const char *src) {
   char *save = dest;
   while (*dest++ = *src++)
     ;
   return save;
 }
 
-__device__ char *strncpy(char *dest, const char *src, size_t n) {
-  char *ret = dest;
-  do {
-    if (!n--)
-      return ret;
-  } while (*dest++ = *src++);
-  while (n--)
-    *dest++ = 0;
-  return ret;
-}
+// char *strncpy(char *dest, const char *src, size_t n) {
+//  char *ret = dest;
+//  do {
+//    if (!n--)
+//      return ret;
+//  } while (*dest++ = *src++);
+//  while (n--)
+//    *dest++ = 0;
+//  return ret;
+//}
 
 __device__ void toupper(char *s) {
   for (; *s; s++)
@@ -100,7 +102,7 @@ __device__ char *md5_pad(const char *input) {
 
   // we store the length of the input (in bits) for later
 
-  orig_input_length = strlen(input) * 8;
+  orig_input_length = custrlen(input) * 8;
 
   // we would like to split the MD5 into 512 bit chunks with a special ending
   // the maximum input we support is currently 512 bits as we are not expecting
@@ -108,7 +110,7 @@ __device__ char *md5_pad(const char *input) {
 
   memset(md5_padded, 0, MD5_INPUT_LENGTH);
 
-  for (x = 0; x < strlen(input) && x < 56; x++) {
+  for (x = 0; x < custrlen(input) && x < 56; x++) {
     md5_padded[x] = input[x];
   }
 
@@ -124,7 +126,6 @@ __device__ char *md5_pad(const char *input) {
 char *md5_unpad(char *input) {
   static char md5_unpadded[MD5_INPUT_LENGTH];
   unsigned int orig_length;
-  int x;
 
   if (input == NULL) {
     return NULL;
@@ -134,18 +135,18 @@ char *md5_unpad(char *input) {
 
   orig_length = (*((unsigned int *)input + 14) / 8);
 
-  strncpy(md5_unpadded, input, orig_length);
+  strncpy(md5_unpadded, input, MD5_INPUT_LENGTH);
 
   return md5_unpadded;
 }
 
-__device__ void md5(uint *in, uint *hash) {
-  uint a, b, c, d;
+__device__ void md5(uint32_t *in, uint32_t *hash) {
+	uint32_t a, b, c, d;
 
-  const uint a0 = 0x67452301;
-  const uint b0 = 0xEFCDAB89;
-  const uint c0 = 0x98BADCFE;
-  const uint d0 = 0x10325476;
+  const uint32_t a0 = 0x67452301;
+  const uint32_t b0 = 0xEFCDAB89;
+  const uint32_t c0 = 0x98BADCFE;
+  const uint32_t d0 = 0x10325476;
 
   a = a0;
   b = b0;
@@ -253,14 +254,15 @@ __device__ void md5(uint *in, uint *hash) {
   return;
 }
 
-__device__ char *constructWord(char *word, uint32_t Caps, char *AppendIndexes) {
+__device__ char *constructWord(char *word, uint32_t Caps, int *AppendIndexes) {
   char AppendChar[] = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS"
                       "TUVWXYZ !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
   AppendChar[0] = '\0';
 
-  int n = strlen(word);
-  char newWord[24];
-  strcpy(newWord, word);
+  int n = custrlen(word);
+  char *newWord;
+  cudaMalloc(&newWord, 24 * sizeof(char));
+  custrcpy(newWord, word);
   // Number of permutations is 2^n
   for (int j = 0; j < n; j++) {
     if (((Caps >> j) & 1) == 1) {
@@ -291,12 +293,12 @@ __device__ char *constructWord(char *word, uint32_t Caps, char *AppendIndexes) {
 }
 
 __global__ void md5_cuda_calculate(void *wordlist, int wordlist_len,
-                                   uint32_t Caps, char *AppendIndexes,
+                                   uint32_t Caps, int *AppendIndexes,
                                    struct device_stats *stats,
-                                   int * target_hash, int targets) {
+                                   uint32_t * target_hash, int targets) {
   unsigned int id;
-  int * targetHashes[4] = reinterpret_cast<int (*)[4]>(target_hash);
-  uint hash[4];
+  //int (*targetHashes)[4] = (int (*)[4])(target_hash);
+  uint32_t hash[4];
   int x;
 
   id = (blockIdx.x * blockDim.x) +
@@ -307,17 +309,17 @@ __global__ void md5_cuda_calculate(void *wordlist, int wordlist_len,
     char *word = (reinterpret_cast<char(*)[64]>(wordlist))[i];
     char *changed = constructWord(word, Caps, AppendIndexes);
     char *padWord = md5_pad(changed);
-    md5(static_cast<uint *>(padWord), hash);
+    md5((uint32_t *)(padWord), hash);
 
     for (int i = 0; i < targets; i++) {
-      if (hash[0] == targetHashes[i][0] && hash[1] == targetHashes[i][1] &&
-          hash[2] == targetHashes[i][2] && hash[3] == targetHashes[i][3]) {
+      if (hash[0] == target_hash[i * 4 + 0] && hash[1] == target_hash[i * 4 + 1] &&
+          hash[2] == target_hash[i * 4 + 2] && hash[3] == target_hash[i * 4 + 3]) {
 
         // !! WE HAVE A MATCH !!
-        stats.hash[stats.hash_found] = i;
+        stats->hash[stats->hash_found] = i;
         for (x = 0; x < 64; x++) {
           // copy the matched word across
-          stats->word[stats.hash_found][x] = *(char *)((char *)padWord + x);
+          stats->word[stats->hash_found][x] = *(padWord + x);
         }
         stats->hash_found++;
       }
@@ -325,60 +327,70 @@ __global__ void md5_cuda_calculate(void *wordlist, int wordlist_len,
   }
 }
 
-void md5_calculate(struct cuda_device *device) {
-  cudaEvent_t start, stop;
-  float time;
-  uint128_t hashes = 0;
-  uint32_t Caps = 0;
-  int foundHashes = 0;
-  auto start = chrono::high_resolution_clock::now();
-  char *AppendIndexes;
-  cudaMallocManaged(&AppendIndexes, 6 * sizeof(char));
-  memset(AppendIndexes, 0, 6 * sizeof(char)); // start everything as 0
-  for (int sixth = 0; sixth < 96; sixth++) {
-    for (int fifth = 0; fifth < 96; fifth++) {
-      for (int fourth = 0; fourth < 96; fourth++) {
-        for (int third = 0; third < 96; third++) {
-          for (int second = 0; second < 96; second++) {
-            for (int first = 0; first < 96; first++) {
-              for (Caps = 0; Caps < (1 << 16); Caps++) {
-                AppendIndexes[0] = first;
-                AppendIndexes[1] = second;
-                AppendIndexes[2] = third;
-                AppendIndexes[3] = fourth;
-                AppendIndexes[4] = fifth;
-                AppendIndexes[5] = sixth;
+namespace md5scope {
+	void md5_calculate(struct cuda_device *device) {
+		uint64_t hashes = 0;
+		uint32_t Caps = 0;
+		int foundHashes = 0;
+		auto start = chrono::high_resolution_clock::now();
+		int *CudaAppendIndexes;
+		cudaMallocManaged(&CudaAppendIndexes, 6 * sizeof(int));
+		memset(CudaAppendIndexes, 0, 6 * sizeof(char)); // start everything as 0
 
-                md5_cuda_calculate<<<device->max_blocks, device->max_threads>>>(
-                    device.wordlist, device.wordlist_len, Caps, AppendIndexes,
-                    static_cast<device_stats *>(device.device_stats_memory),
-                    reinterpret_cast<int(*)[4]>(device.target_hash),
-                    device.targets);
+		int AppendIndexes[6];
+		device->stats.hash_found = 0;
+		for (int sixth = 0; sixth < 96; sixth++) {
+			for (int fifth = 0; fifth < 96; fifth++) {
+				for (int fourth = 0; fourth < 96; fourth++) {
+					for (int third = 0; third < 96; third++) {
+						for (int second = 0; second < 96; second++) {
+							for (int first = 0; first < 96; first++) {
+								for (Caps = 0; Caps < (1 << 16); Caps++) {
+									
+									AppendIndexes[0] = first;
+									AppendIndexes[1] = second;
+									AppendIndexes[2] = third;
+									AppendIndexes[3] = fourth;
+									AppendIndexes[4] = fifth;
+									AppendIndexes[5] = sixth;
+									memcpy(CudaAppendIndexes, AppendIndexes, sizeof(AppendIndexes));
+									cudaDeviceSynchronize();
 
-                cudaDeviceSynchronize();
-                hashes += device.wordlist_len;
-                if (foundHashes < device.stats.hash_found) {
-                  auto now = chrono::high_resolution_clock::now();
-                  using day_t = duration<long, std::ratio<3600 * 24>>;
-                  auto dur = end - start;
-                  auto d = duration_cast<day_t>(dur);
-                  auto h = duration_cast<hours>(dur -= d);
-                  auto m = duration_cast<minutes>(dur -= h);
-                  auto s = duration_cast<seconds>(dur -= m);
-                  auto ms = duration_cast<milliseconds>(dur -= s);
-                  for (int i = (device.stats.hash_found - foundHashes); i > 0;
-                       i--) {
-                    char *unpadHash = md5_unpad(
-                        device.stats.word[device.stats.hash_found - i]);
-                    printf("%i:\t%c:\t", device.stats.hash[i], unpadHash);
-                  }
-                }
-                printf("")
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+									
+									md5_cuda_calculate<<<16, 1024 >>> (
+										device->wordlist, device->wordlist_len, Caps, CudaAppendIndexes,
+										static_cast<device_stats *>(device->device_stats_memory),
+										device->target_hash,
+										device->targets);
+
+									cudaDeviceSynchronize();
+									cudaFree(AppendIndexes);
+									hashes += device->wordlist_len;
+									if (foundHashes < device->stats.hash_found) {
+										auto now = chrono::high_resolution_clock::now();
+										using day_t = chrono::duration<long, std::ratio<3600 * 24>>;
+										auto dur = now - start;
+										auto days = chrono::duration_cast<day_t>(dur);
+										auto hours = chrono::duration_cast<chrono::hours>(dur) - days;
+										auto min = chrono::duration_cast<chrono::minutes>(dur) - days - hours;
+										auto sec = chrono::duration_cast<chrono::seconds>(dur) - days - hours - min;
+										auto ms = chrono::duration_cast<chrono::milliseconds>(dur) - days - hours - min - sec;
+											printf("At %id:%ih:%im:%is:%ims we found %i hashes\n", days.count(), hours.count(), 
+												min.count(), sec.count(), ms.count(), (device->stats.hash_found - foundHashes));
+										for (int i = (device->stats.hash_found - foundHashes); i > 0;
+											i--) {
+											char *unpadHash = md5_unpad(
+												(char*)device->stats.word[device->stats.hash_found - i]);
+											printf("%i:\t%c:\t\n", device->stats.hash[i], unpadHash);
+										}
+									}
+									printf("");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

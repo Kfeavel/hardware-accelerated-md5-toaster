@@ -1,37 +1,39 @@
 #include "main.h"
+#include "md5.cuh"
 #include <algorithm>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include <cuda.h>
 #include <cuda_runtime_api.h>
 #include <fstream>
-#include <netinet/in.h>
-#include <string.h>
+#include <iostream>
+//#include <netinet/in.h>
+#include <string>
+#include <vector>
+
 
 #define MD5_INPUT_LENGTH 512
 
 using namespace std;
 
-extern void md5_calculate(struct cuda_device *);
 
-char *md5_unpad(char *input)
-{
-  static char md5_unpadded[MD5_INPUT_LENGTH];
-  unsigned int orig_length;
-  int x;
-
-  if (input == NULL)
-  {
-    return NULL;
-  }
-
-  memset(md5_unpadded, 0, sizeof(md5_unpadded));
-
-  orig_length = (*((unsigned int *)input + 14) / 8);
-
-  strncpy(md5_unpadded, input, orig_length);
-
-  return md5_unpadded;
-}
+//char *md5_unpad(char *input)
+//{
+//  static char md5_unpadded[MD5_INPUT_LENGTH];
+//  unsigned int orig_length;
+//
+//  if (input == NULL)
+//  {
+//    return NULL;
+//  }
+//
+//  memset(md5_unpadded, 0, sizeof(md5_unpadded));
+//
+//  orig_length = (*((unsigned int *)input + 14) / 8);
+//
+//  strncpy(md5_unpadded, input, orig_length);
+//
+//  return md5_unpadded;
+//}
 
 
 
@@ -90,8 +92,6 @@ int calculate_cuda_params(struct cuda_device *device)
   // now we need to have (device.max_threads * device.max_blocks) number of
   // words in memory for the graphics card
 
-  device->device_global_memory_len =
-      (device->max_threads * device->max_blocks) * 64;
 
   return 1;
 }
@@ -114,10 +114,9 @@ int read_wordlist(struct wordlist_file *file)
     words.push_back(word);
   }
   file->len = 0;
-  cudaMallocManaged(&(file->words), words.size() * 64 * sizeof(char));
-  for (int i = 0; i < words.size(); i++) {
-	char *tmp = word.c_str();
-    copy(&tmp, &tmp + 64, file->words + file.len * 64);
+  cudaMallocManaged((void**)(&(file->words)), words.size() * 64 * sizeof(char));
+  for (uint32_t i = 0; i < words.size(); i++) {
+	strncpy(file->words + file->len * 64, word.c_str(), 64);
     file->len++;
   }
 
@@ -125,25 +124,27 @@ int read_wordlist(struct wordlist_file *file)
   return 1;
 }
 
-int read_hashlist(ifstream ifs, struct cuda_device *device)
+void read_hashlist(ifstream &ifs, struct cuda_device *device)
 {
-  vector<int[4]> hashes;
+  vector<vector<int>> hashes;
+  vector<int> tmp_hash;
+  tmp_hash.resize(4);
   std::string hash;
   int len = 0;
   while (ifs >> hash)
   {
-    hashes.push_back({0, 0, 0, 0});
-    sscanf(hash.c_str(), "%x%x%x%x", hashes[len][0], hashes[len * 4][1],
-           hashes[len * 4][2], hashes[len * 4][3]);
+    sscanf(hash.c_str(), "%x%x%x%x", &tmp_hash[0], &tmp_hash[1],
+           &tmp_hash[2], &tmp_hash[3]);
+	hashes.push_back(tmp_hash);
     len++;
   }
-  device.targets = len;
-  cudaMallocManaged(&(device.target_hash), (len + 1) * 4 * sizeof(int));
+  device->targets = len;
+  cudaMallocManaged((void**)(&(device->target_hash)), (len + 1) * 4 * sizeof(int));
   for (int i = 0; i < len; i++)
   {
     for (int j = 0; j < 4; j++)
     {
-      (reinterpret_cast<int(*)[4]>(device.target_hash))[i][j] = hashes[i][j];
+      (reinterpret_cast<int(*)[4]>(device->target_hash))[i][j] = hashes[i][j];
     }
   }
 }
@@ -241,12 +242,6 @@ int _httoi(const char *value)
 
 /*************************************************************************/
 
-void print_info(void)
-{
-  printf("cuda_md5_crack programmed by XPN "
-         "(http://xpnsbraindump.blogspot.com)\n\n");
-  return;
-}
 
 #define ARG_MD5 2
 #define ARG_WORDLIST 1
@@ -254,24 +249,21 @@ void print_info(void)
 
 int main(int argc, char **argv)
 {
-  char *output;
-  int x;
-  int y;
   struct cuda_device device;
   int available_words = 1;
   int current_words = 0;
   struct wordlist_file file;
-  char input_hash[4][9];
 
-  print_info();
 
   if (argc != ARG_COUNT)
   {
     printf("Usage: %s WORDLIST_FILE MD5_HASH\n", argv[0]);
     return -1;
   }
-  file.ifs.open(argv[ARG_WORDLIST]);
-  if (file.ifs.is_open())
+  file.ifs.open(argv[ARG_WORDLIST], ifstream::in);
+  char * wordlistfile = argv[ARG_WORDLIST];
+  //printf(wordlistfile);
+  if (!(file.ifs.is_open()))
   {
     printf("Error Opening Wordlist File: %s\n", argv[ARG_WORDLIST]);
     return -1;
@@ -305,9 +297,10 @@ int main(int argc, char **argv)
   // now we input our target hash
   ifstream ifs;
   ifs.open(argv[ARG_MD5]);
+  char* hashfile = argv[ARG_MD5];
   if (!ifs.is_open())
   {
-    printf("Error Opening Hashlist File: %s\n", argv[ARG_MD5]);
+    printf("Error Opening Hashlist File: %s\n", argv[ARG_MD5+1]);
     return -1;
   }
 
@@ -317,9 +310,9 @@ int main(int argc, char **argv)
 
   // we split the input hash into 4 blocks
   cudaMallocManaged(&(device.device_stats_memory), sizeof(device_stats));
-  copy(&(device.device_stats), &(device.device_stats) + sizeof(device_stats), device.device_stats_memory);
+  memcpy(device.device_stats_memory, &(device.stats), sizeof(device_stats));
 
-  md5_calculate(&device); // launch the kernel of the CUDA device
+  md5scope::md5_calculate(&device); // launch the kernel of the CUDA device
 
 
 
