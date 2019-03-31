@@ -96,12 +96,7 @@ int calculate_cuda_params(struct cuda_device *device)
   return 1;
 }
 
-struct wordlist_file
-{
-  std::ifstream ifs;
-  int len;
-  char *words;
-};
+
 
 #define WORDS_TO_CACHE 10000
 #define FILE_BUFFER 512
@@ -142,6 +137,7 @@ int read_hashlist(ifstream ifs, struct cuda_device *device)
            hashes[len * 4][2], hashes[len * 4][3]);
     len++;
   }
+  device.targets = len;
   cudaMallocManaged(&(device.target_hash), (len + 1) * 4 * sizeof(int));
   for (int i = 0; i < len; i++)
   {
@@ -291,6 +287,8 @@ int main(int argc, char **argv)
     printf("%s contains %i words", argv[ARG_WORDLIST], file.len);
   }
   file.ifs.close();
+  device.wordlist = static_cast<void*>(file.words);
+  device.wordlist_len = file.len;
 
   // first things first, we need to select our CUDA device
 
@@ -315,6 +313,7 @@ int main(int argc, char **argv)
 
   read_hashlist(ifs, &device);
   ifs.close();
+
 
   // we split the input hash into 4 blocks
   cudaMallocManaged(&(device.device_stats_memory), sizeof(device_stats));

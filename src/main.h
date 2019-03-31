@@ -4,8 +4,18 @@
 
 struct device_stats {
   unsigned char word[32][64]; // found word passed from GPU
+  int hash[32];
   int hash_found;         // boolean if word is found
 };
+
+
+struct wordlist_file
+{
+  std::ifstream ifs;
+  int len;
+  char *words;
+};
+
 
 struct cuda_device {
   int device_id;
@@ -15,8 +25,8 @@ struct cuda_device {
   int max_blocks;
   int shared_memory;
 
-  void *device_global_memory;
-  int device_global_memory_len;
+  void *wordlist;
+  int wordlist_len;
 
   void *host_memory;
 
@@ -24,6 +34,7 @@ struct cuda_device {
   struct device_stats stats;
 
   unsigned int *target_hash;
+  int targets;
 
   // to be used for debugging
   void *device_debug_memory;
